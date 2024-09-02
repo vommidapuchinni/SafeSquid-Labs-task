@@ -22,16 +22,17 @@ sysctl -p
 # Securing the Bootloader
 log "Securing the bootloader..."
 # For Amazon Linux 2 or newer, GRUB2 is used
-grub2-mkpasswd-pbkdf2  # Follow prompts to create a hashed password
+# Follow prompts to create a hashed password and replace <hashed-password> with the result
+grub2-mkpasswd-pbkdf2
 echo "set superusers='root'" >> /etc/grub.d/40_custom
 echo "password_pbkdf2 root <hashed-password>" >> /etc/grub.d/40_custom
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
 # Firewall Configuration
 log "Configuring the firewall..."
-firewalld --zone=public --add-service=ssh --permanent
-firewalld --zone=public --set-target=DROP --permanent
-firewalld --reload
+firewall-cmd --zone=public --add-service=ssh --permanent
+firewall-cmd --zone=public --set-target=DROP --permanent
+firewall-cmd --reload
 
 # Automatic Updates
 log "Setting up automatic updates..."
@@ -51,4 +52,3 @@ check_apache() {
 }
 
 log "Server hardening completed."
-
